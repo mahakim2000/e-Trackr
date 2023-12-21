@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "316077005940",
+    "project_id": "e-trackr",
+    "storage_bucket": "e-trackr.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:316077005940:android:48711374beb972a4e4c521",
+        "android_client_info": {
+          "package_name": "com.example.e_trackr"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0WUVsq7BxFxkZgUM8DGMxxaxSQwNfIiA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
