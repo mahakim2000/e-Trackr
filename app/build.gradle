@@ -48,4 +48,5 @@ dependencies {
     implementation 'com.intuit.sdp:sdp-android:1.0.6'
     implementation 'com.intuit.ssp:ssp-android:1.0.6'
     implementation 'com.google.android.gms:play-services-auth:20.7.0'
+    implementation 'com.makeramen:roundedimageview:2.3.0'
 }
