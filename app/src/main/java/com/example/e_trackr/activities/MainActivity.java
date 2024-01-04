@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setListeners() {
-        binding.buttonSignOut.setOnClickListener(v -> signOut());
+        //binding.buttonSignOut.setOnClickListener(v -> signOut());
     }
 
     private void showToast(String message) {
