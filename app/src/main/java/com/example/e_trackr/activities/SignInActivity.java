@@ -8,7 +8,6 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.e_trackr.databinding.ActivitySignInBinding;
 import com.example.e_trackr.utilities.Constants;
 import com.example.e_trackr.utilities.PreferenceManager;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,7 +42,7 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void navigateToMainActivity() {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
         startActivity(intent);
         finish();
     }
@@ -119,7 +118,7 @@ public class SignInActivity extends AppCompatActivity {
                             preferenceManager.putString(Constants.KEY_IMAGE, image);
 
                             loading(false);
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                         } else {
