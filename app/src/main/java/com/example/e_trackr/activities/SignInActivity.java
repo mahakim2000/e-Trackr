@@ -42,7 +42,7 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void navigateToMainActivity() {
-        Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+        Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
         startActivity(intent);
         finish();
     }
@@ -118,7 +118,7 @@ public class SignInActivity extends AppCompatActivity {
                             preferenceManager.putString(Constants.KEY_IMAGE, image);
 
                             loading(false);
-                            Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                            Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                         } else {

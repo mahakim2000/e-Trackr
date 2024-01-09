@@ -6,23 +6,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.example.e_trackr.databinding.ActivityMenuBinding;
 import com.example.e_trackr.databinding.ActivityProfileBinding;
 import com.example.e_trackr.utilities.PreferenceManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class ProfileActivity extends AppCompatActivity {
+public class MenuActivity extends AppCompatActivity {
 
-    private ActivityProfileBinding binding;
+    private ActivityMenuBinding binding;
     private PreferenceManager preferenceManager;
     private FirebaseFirestore database;
-
     private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = com.example.e_trackr.databinding.ActivityProfileBinding.inflate(getLayoutInflater());
+        binding = ActivityMenuBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         preferenceManager = new PreferenceManager(getApplicationContext());
         init();
