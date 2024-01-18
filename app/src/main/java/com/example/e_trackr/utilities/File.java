@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class File implements Serializable {
 
     public String fileName, borrowerName, timeStamp, fileStatus, fileDescription, id;
+    public boolean outgoing, incoming;
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
@@ -44,5 +45,21 @@ public class File implements Serializable {
 
     public String getFileDescription() {
         return fileDescription;
+    }
+
+    public boolean isOutgoing() {
+        return outgoing;
+    }
+
+    public void setOutgoing(boolean outgoing) {
+        this.outgoing = outgoing;
+    }
+
+    public boolean isIncoming() {
+        return incoming;
+    }
+
+    public void setIncoming(boolean incoming) {
+        this.incoming = incoming;
     }
 }

@@ -53,6 +53,8 @@ public class AddFileActivity extends AppCompatActivity {
         String fileDescription = etFileDescription.getText().toString().trim();
         String borrowerName = null;
         String timeStamp = null;
+        String outgoing = null;
+        String incoming = null;
         String fileStatus = null;
 
         progressBar.setVisibility(View.VISIBLE);
@@ -62,7 +64,8 @@ public class AddFileActivity extends AppCompatActivity {
         fileInfo.put(Constants.KEY_FILEDESCRIPTION, fileDescription);
         fileInfo.put(Constants.KEY_BORROWERNAME, borrowerName);
         fileInfo.put(Constants.KEY_TIMESTAMP, timeStamp);
-        fileInfo.put(Constants.KEY_FILESTATUS, fileStatus);
+        fileInfo.put(Constants.KEY_OUTGOING, outgoing);
+        fileInfo.put(Constants.KEY_INCOMING, incoming);
 
         firestore.collection(Constants.KEY_COLLECTION_FILE_INFO)
                 .add(fileInfo)

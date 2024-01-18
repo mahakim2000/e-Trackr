@@ -18,6 +18,8 @@ public class Constants {
     public static final String KEY_TIMESTAMP = "timestamp";
     public static final String KEY_FILESTATUS = "fileStatus";
     public static final String KEY_COLLECTION_FILE_INFO = "fileInfo";
+    public static final String KEY_OUTGOING = "outgoing";
+    public static final String KEY_INCOMING = "incoming";
 
     public static final int REQUEST_CODE_IMAGE_PICKER = 100;
 }

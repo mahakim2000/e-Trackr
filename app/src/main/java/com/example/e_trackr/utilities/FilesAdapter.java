@@ -54,7 +54,17 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.MyViewHolder
             binding.fileName.setText(file.fileName);
             binding.borrowerName.setText(file.borrowerName);
             binding.timeStamp.setText(file.timeStamp);
-            binding.fileStatus.setText(file.fileStatus);
+
+            String fileStatus;
+            if (file.outgoing) {
+                fileStatus = "Outgoing";
+            } else if (file.incoming) {
+                fileStatus = "Returned";
+            } else {
+                fileStatus = "Unknown Status";
+            }
+            binding.fileStatus.setText(fileStatus);
+
             binding.getRoot().setOnClickListener(v -> fileListener.onFileClicked(file));
         }
     }

@@ -46,19 +46,40 @@ public class HomeActivity extends AppCompatActivity implements FileListener {
                     loading(false);
                     if (task.isSuccessful() && task.getResult() != null) {
                         List<File> files = new ArrayList<>();
+
+                        int outgoingCount = 0;
+                        int incomingCount = 0;
+
                         for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
                             File file = new File();
                             file.fileName = queryDocumentSnapshot.getString(Constants.KEY_FILENAME);
                             file.borrowerName = queryDocumentSnapshot.getString(Constants.KEY_BORROWERNAME);
                             file.timeStamp = queryDocumentSnapshot.getString(Constants.KEY_TIMESTAMP);
-                            file.fileStatus = queryDocumentSnapshot.getString(Constants.KEY_FILESTATUS);
+                            file.outgoing = Boolean.TRUE.equals(queryDocumentSnapshot.getBoolean(Constants.KEY_OUTGOING));
+                            file.incoming = Boolean.TRUE.equals(queryDocumentSnapshot.getBoolean(Constants.KEY_INCOMING));
                             file.id = queryDocumentSnapshot.getId();
                             files.add(file);
+
+                            if (file.outgoing) {
+                                outgoingCount++;
+                            }
+
+                            if (file.incoming) {
+                                incomingCount++;
+                            }
                         }
+
+                        int totalFilesCount = files.size();
+
                         if (files.size() > 0) {
                             FilesAdapter filesAdapter = new FilesAdapter(files, this);
                             binding.homeActivityRecyclerView.setAdapter(filesAdapter);
                             binding.homeActivityRecyclerView.setVisibility(View.VISIBLE);
+
+                            binding.tvOutgoing.setText(String.valueOf(outgoingCount));
+                            binding.tvIncoming.setText(String.valueOf(incomingCount));
+                            binding.tvRemainingFiles.setText(String.valueOf(incomingCount));
+                            binding.tvTotalFiles.setText(String.valueOf(totalFilesCount));
                         } else {
                             showErrorMessage();
                         }
