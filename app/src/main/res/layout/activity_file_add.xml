@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@color/white"
-    tools:context=".activities.ProfileActivity"
+    tools:context=".activities.AddFileActivity"
     android:orientation="vertical">
 
     <ScrollView
@@ -50,7 +50,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="32dp"
-                    android:text="Profile"
+                    android:text="Add File"
                     android:textColor="@color/white"
                     android:textSize="30sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -97,90 +97,94 @@
                 android:layout_height="wrap_content"
                 android:text="Email"/>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="80dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginBottom="16dp">
-
-                <ImageView
-                    android:id="@+id/imageViewAccount"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="1.0"
-                    app:srcCompat="@drawable/username" />
-
-                <TextView
-                    android:id="@+id/textViewAccount1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:hint="User Name"
-                    android:textColor="@color/primary"
-                    android:textColorHint="@color/primary"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/imageViewAccount"
-                    app:layout_constraintTop_toTopOf="@+id/imageViewAccount" />
-
-                <ImageView
-                    android:id="@+id/imageViewAccountArrow"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/pencil" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="32dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginBottom="16dp">
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
-                <ImageView
-                    android:id="@+id/imageViewNotification"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/email" />
-
-                <TextView
-                    android:id="@+id/textViewAccount2"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:hint="Email"
-                    android:textColor="@color/primary"
-                    android:textColorHint="@color/primary"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/imageViewNotification"
-                    app:layout_constraintTop_toTopOf="@+id/imageViewNotification" />
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/imageViewEmailEdit"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/pencil" />
+                    <FrameLayout
+                        android:id="@+id/layoutImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_20sdp">
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    </FrameLayout>
+
+                    <EditText
+                        android:id="@+id/etFileName"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="32dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/background_edittext"
+                        android:drawablePadding="16dp"
+                        android:ems="10"
+                        android:backgroundTint="@color/white"
+                        android:hint="File Name"
+                        android:inputType="text"
+                        android:padding="16dp"
+                        android:textColor="@color/primary" />
+
+                    <EditText
+                        android:id="@+id/etFileDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="32dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/background_edittext"
+                        android:drawablePadding="16dp"
+                        android:ems="10"
+                        android:backgroundTint="@color/white"
+                        android:hint="File Description"
+                        android:inputType="text"
+                        android:padding="16dp"
+                        android:textColor="@color/primary" />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_16sdp"
+                        android:animateLayoutChanges="true">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/buttonSignUp"
+                            android:layout_width="350dp"
+                            android:layout_height="@dimen/_50sdp"
+                            android:text="Add"
+                            android:layout_gravity="center"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_13sdp"
+                            android:textStyle="bold"
+                            app:cornerRadius="@dimen/_8sdp"/>
+
+                        <ProgressBar
+                            android:id="@+id/progressBar"
+                            android:layout_width="@dimen/_25sdp"
+                            android:layout_height="@dimen/_25sdp"
+                            android:layout_gravity="center"
+                            android:visibility="invisible"/>
+
+                    </FrameLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 

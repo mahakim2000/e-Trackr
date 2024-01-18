@@ -12,13 +12,19 @@
         android:theme="@style/Theme.ETrackr"
         tools:targetApi="31">
         <activity
-            android:name=".FileListActivity"
+            android:name=".MainActivitysadas"
             android:exported="false" />
         <activity
-            android:name=".EditProfileActivity"
+            android:name=".activities.AddFileActivity"
             android:exported="false" />
         <activity
-            android:name=".HomeActivity"
+            android:name=".activities.FileListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.MenuActivity"
             android:exported="false" />
         <activity
             android:name=".activities.ForgotPasswordActivity"
@@ -27,7 +33,7 @@
             android:name=".activities.SignUpActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.MenuActivity"
+            android:name=".activities.HomeActivity"
             android:exported="false" />
         <activity
             android:name=".activities.SignInActivity"

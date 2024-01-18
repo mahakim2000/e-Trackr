@@ -34,7 +34,14 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void setListeners() {
-        //binding.buttonSignOut.setOnClickListener(v -> signOut());
+        binding.ivHome.setOnClickListener(v ->
+                startActivity(new Intent(getApplicationContext(), HomeActivity.class)));
+        binding.ivFiles.setOnClickListener(v ->
+                startActivity(new Intent(getApplicationContext(), FileListActivity.class)));
+        binding.ivProfile.setOnClickListener(v ->
+                startActivity(new Intent(getApplicationContext(), ProfileActivity.class)));
+        binding.ivMenu.setOnClickListener(v ->
+                startActivity(new Intent(getApplicationContext(), MenuActivity.class)));
     }
 
     private void showToast(String message) {
