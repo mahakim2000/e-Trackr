@@ -33,7 +33,7 @@ public class HomeActivity extends AppCompatActivity implements FileListener {
         setContentView(binding.getRoot());
         setListeners();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        binding.fileListRecyclerView.setLayoutManager(layoutManager);
+        binding.homeActivityRecyclerView.setLayoutManager(layoutManager);
         getFiles();
     }
 
@@ -49,14 +49,16 @@ public class HomeActivity extends AppCompatActivity implements FileListener {
                         for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
                             File file = new File();
                             file.fileName = queryDocumentSnapshot.getString(Constants.KEY_FILENAME);
-                            file.fileDescription = queryDocumentSnapshot.getString(Constants.KEY_FILEDESCRIPTION);
+                            file.borrowerName = queryDocumentSnapshot.getString(Constants.KEY_BORROWERNAME);
+                            file.timeStamp = queryDocumentSnapshot.getString(Constants.KEY_TIMESTAMP);
+                            file.fileStatus = queryDocumentSnapshot.getString(Constants.KEY_FILESTATUS);
                             file.id = queryDocumentSnapshot.getId();
                             files.add(file);
                         }
                         if (files.size() > 0) {
                             FilesAdapter filesAdapter = new FilesAdapter(files, this);
-                            binding.fileListRecyclerView.setAdapter(filesAdapter);
-                            binding.fileListRecyclerView.setVisibility(View.VISIBLE);
+                            binding.homeActivityRecyclerView.setAdapter(filesAdapter);
+                            binding.homeActivityRecyclerView.setVisibility(View.VISIBLE);
                         } else {
                             showErrorMessage();
                         }

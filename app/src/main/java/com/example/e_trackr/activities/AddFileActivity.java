@@ -51,12 +51,18 @@ public class AddFileActivity extends AppCompatActivity {
     private void uploadFileInfo() {
         String fileName = etFileName.getText().toString().trim();
         String fileDescription = etFileDescription.getText().toString().trim();
+        String borrowerName = null;
+        String timeStamp = null;
+        String fileStatus = null;
 
         progressBar.setVisibility(View.VISIBLE);
 
         Map<String, Object> fileInfo = new HashMap<>();
         fileInfo.put(Constants.KEY_FILENAME, fileName);
         fileInfo.put(Constants.KEY_FILEDESCRIPTION, fileDescription);
+        fileInfo.put(Constants.KEY_BORROWERNAME, borrowerName);
+        fileInfo.put(Constants.KEY_TIMESTAMP, timeStamp);
+        fileInfo.put(Constants.KEY_FILESTATUS, fileStatus);
 
         firestore.collection(Constants.KEY_COLLECTION_FILE_INFO)
                 .add(fileInfo)

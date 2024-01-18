@@ -6,33 +6,34 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.e_trackr.databinding.ListItem2Binding;
 import com.example.e_trackr.databinding.ListItemBinding;
 
 import java.util.List;
 
-public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.MyViewHolder> {
+public class FilesAdapter2 extends RecyclerView.Adapter<FilesAdapter2.MyViewHolder2> {
 
     private final List<File> files;
     private final FileListener fileListener;
 
-    public FilesAdapter(List<File> files, FileListener fileListener) {
+    public FilesAdapter2(List<File> files, FileListener fileListener) {
         this.files = files;
         this.fileListener = fileListener;
     }
 
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ListItemBinding listItemBinding = ListItemBinding.inflate(
+    public MyViewHolder2 onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        ListItem2Binding listItem2Binding = ListItem2Binding.inflate(
                 LayoutInflater.from(parent.getContext()),
                 parent,
                 false
         );
-        return new MyViewHolder(listItemBinding);
+        return new MyViewHolder2(listItem2Binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder2 holder, int position) {
         holder.setFileData(files.get(position));
     }
 
@@ -41,20 +42,18 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.MyViewHolder
         return files.size();
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder {
+    class MyViewHolder2 extends RecyclerView.ViewHolder {
 
-        ListItemBinding binding;
+        ListItem2Binding binding;
 
-        MyViewHolder(ListItemBinding listItemBinding) {
-            super(listItemBinding.getRoot());
-            binding = listItemBinding;
+        MyViewHolder2(ListItem2Binding listItem2Binding) {
+            super(listItem2Binding.getRoot());
+            binding = listItem2Binding;
         }
 
         void setFileData(File file) {
             binding.fileName.setText(file.fileName);
-            binding.borrowerName.setText(file.borrowerName);
-            binding.timeStamp.setText(file.timeStamp);
-            binding.fileStatus.setText(file.fileStatus);
+            binding.fileDescription.setText(file.fileDescription);
             binding.getRoot().setOnClickListener(v -> fileListener.onFileClicked(file));
         }
     }

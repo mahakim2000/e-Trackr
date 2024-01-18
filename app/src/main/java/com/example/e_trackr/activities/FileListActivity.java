@@ -1,6 +1,7 @@
 package com.example.e_trackr.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +13,7 @@ import com.example.e_trackr.databinding.ActivityFileListBinding;
 import com.example.e_trackr.utilities.Constants;
 import com.example.e_trackr.utilities.File;
 import com.example.e_trackr.utilities.FileListener;
-import com.example.e_trackr.utilities.FilesAdapter;
+import com.example.e_trackr.utilities.FilesAdapter2;
 import com.example.e_trackr.utilities.PreferenceManager;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -32,6 +33,8 @@ public class FileListActivity extends AppCompatActivity implements FileListener 
         setContentView(binding.getRoot());
         preferenceManager = new PreferenceManager(getApplicationContext());
         setListeners();
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        binding.fileListActivityRecyclerView.setLayoutManager(layoutManager);
         getFiles();
     }
 
@@ -52,9 +55,9 @@ public class FileListActivity extends AppCompatActivity implements FileListener 
                             files.add(file);
                         }
                         if (files.size() > 0) {
-                            FilesAdapter filesAdapter = new FilesAdapter(files, this);
-                            binding.fileListRecyclerView.setAdapter(filesAdapter);
-                            binding.fileListRecyclerView.setVisibility(View.VISIBLE);
+                            FilesAdapter2 filesAdapter2 = new FilesAdapter2(files, this);
+                            binding.fileListActivityRecyclerView.setAdapter(filesAdapter2);
+                            binding.fileListActivityRecyclerView.setVisibility(View.VISIBLE);
                         } else {
                             showErrorMessage();
                         }

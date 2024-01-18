@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class File implements Serializable {
 
-    public String fileName, borrowerName,timeStamp, fileDescription, id;
+    public String fileName, borrowerName, timeStamp, fileStatus, fileDescription, id;
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
@@ -16,6 +16,10 @@ public class File implements Serializable {
 
     public void setTimeStamp(String timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    public void setFileStatus(String fileStatus) {
+        this.fileStatus = fileStatus;
     }
 
     public void setFileDescription(String fileDescription) {
@@ -32,6 +36,10 @@ public class File implements Serializable {
 
     public String getTimeStamp() {
         return timeStamp;
+    }
+
+    public String getFileStatus() {
+        return fileStatus;
     }
 
     public String getFileDescription() {
