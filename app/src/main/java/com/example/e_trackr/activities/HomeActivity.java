@@ -122,10 +122,10 @@ public class HomeActivity extends AppCompatActivity implements FileListener {
     }
 
     public void onFileClicked(File file) {
-        Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
+        //Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
         //intent.putExtra(Constants.KEY_USER, user);
-        startActivity(intent);
-        finish();
+        //startActivity(intent);
+        //finish();
     }
 
     private void loadUserDetails() {

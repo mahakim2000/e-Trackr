@@ -232,7 +232,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_marginLeft="16dp"
-                                        android:text="In-coming"
+                                        android:text="Returned"
                                         android:textStyle="bold" />
 
                                 </LinearLayout>

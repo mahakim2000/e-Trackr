@@ -36,14 +36,16 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:srcCompat="@drawable/arc_3" />
 
-                <ImageView
-                    android:id="@+id/imageViewUser"
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/ivUser"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
+                    android:background="@drawable/background_icon"
+                    android:scaleType="centerCrop"
                     app:layout_constraintBottom_toBottomOf="@+id/imageView"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:srcCompat="@drawable/user_2" />
+                    app:riv_corner_radius="@dimen/_8sdp"/>
 
                 <TextView
                     android:id="@+id/textView"
@@ -80,7 +82,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
-                android:id="@+id/textViewUserName"
+                android:id="@+id/tvUserName"
                 android:layout_width="match_parent"
                 android:textAlignment="center"
                 android:layout_height="wrap_content"
@@ -91,7 +93,7 @@
                 android:layout_marginTop="8dp"/>
 
             <TextView
-                android:id="@+id/textViewUserEmail"
+                android:id="@+id/tvUserEmail"
                 android:layout_width="match_parent"
                 android:textAlignment="center"
                 android:layout_height="wrap_content"
@@ -116,7 +118,7 @@
                     app:srcCompat="@drawable/username" />
 
                 <TextView
-                    android:id="@+id/textViewAccount1"
+                    android:id="@+id/tvUserNameEdit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -158,7 +160,7 @@
                     app:srcCompat="@drawable/email" />
 
                 <TextView
-                    android:id="@+id/textViewAccount2"
+                    android:id="@+id/tvUserEmailEdit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -170,15 +172,6 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/imageViewNotification"
                     app:layout_constraintTop_toTopOf="@+id/imageViewNotification" />
-
-                <ImageView
-                    android:id="@+id/imageViewEmailEdit"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/pencil" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

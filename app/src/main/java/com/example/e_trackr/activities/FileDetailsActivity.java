@@ -18,17 +18,25 @@ import com.example.e_trackr.utilities.File;
 import com.example.e_trackr.utilities.FileListener;
 import com.example.e_trackr.utilities.FilesAdapter3;
 import com.example.e_trackr.utilities.PreferenceManager;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class FileDetailsActivity extends AppCompatActivity implements FileListener {
 
     private ActivityFileDetailsBinding binding;
     private PreferenceManager preferenceManager;
     private File receiveFile;
+    private FirebaseFirestore firestore;
+    private String userId;
+    private String userImage;
+    private String userName;
+    private String userEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +44,10 @@ public class FileDetailsActivity extends AppCompatActivity implements FileListen
         binding = ActivityFileDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         preferenceManager = new PreferenceManager(getApplicationContext());
+        firestore = FirebaseFirestore.getInstance();
+        userId = preferenceManager.getString(Constants.KEY_USER_ID);
         setListeners();
-        loadUserDetails();
+        retrieveUserDetails();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         binding.fileDetailsActivityRecyclerView.setLayoutManager(layoutManager);
         getFiles();
@@ -115,30 +125,42 @@ public class FileDetailsActivity extends AppCompatActivity implements FileListen
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-    private void loadUserDetails() {
-        String userName = preferenceManager.getString(Constants.KEY_NAME);
-        if (userName != null) {
-            binding.tvUserName.setText(userName);
-        } else {
-            binding.tvUserName.setText("Guest");
-        }
-
-        String userEmail = preferenceManager.getString(Constants.KEY_EMAIL);
-        if (userEmail != null) {
-            binding.tvUserEmail.setText(userEmail);
-        } else {
-            binding.tvUserEmail.setText("Guest");
-        }
-
-        byte[] bytes = Base64.decode(preferenceManager.getString(Constants.KEY_IMAGE), Base64.DEFAULT);
-        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-        binding.ivUser.setImageBitmap(bitmap);
-    }
-
     public void onFileClicked(File file) {
         //Intent intent = new Intent(getApplicationContext(), FileDetailsActivity.class);
         //intent.putExtra(Constants.KEY_FILE, file);
         //startActivity(intent);
-        finish();
+        //finish();
+    }
+
+    private void retrieveUserDetails() {
+        //showProgress();
+        DocumentReference userRef = firestore.collection(Constants.KEY_COLLECTION_USERS).document(userId);
+        userRef.get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Map<String, Object> userData = document.getData();
+                            if (userData != null) {
+                                userImage = (String) userData.get(Constants.KEY_IMAGE);
+                                userName = (String) userData.get(Constants.KEY_NAME);
+                                userEmail = (String) userData.get(Constants.KEY_EMAIL);
+                                loadUserDetails();
+                                //hideProgress();
+                            }
+                        }
+                    } else {
+                        showToast("Failed to retrieve user details. Please try again later.");
+                        //hideProgress();
+                    }
+                });
+    }
+
+    private void loadUserDetails() {
+        byte[] bytes = Base64.decode(preferenceManager.getString(Constants.KEY_IMAGE), Base64.DEFAULT);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        binding.ivUser.setImageBitmap(bitmap);
+        binding.tvUserName.setText(userName);
+        binding.tvUserEmail.setText(userEmail);
     }
 }
