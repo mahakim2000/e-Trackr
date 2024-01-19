@@ -3,7 +3,11 @@ package com.example.e_trackr.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -33,8 +37,9 @@ public class AddFileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityFileAddBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         preferenceManager = new PreferenceManager(getApplicationContext());
+        setListeners();
+        loadUserDetails();
         firestore = FirebaseFirestore.getInstance();
         etFileName = findViewById(R.id.etFileName);
         etFileDescription = findViewById(R.id.etFileDescription);
@@ -53,8 +58,8 @@ public class AddFileActivity extends AppCompatActivity {
         String fileDescription = etFileDescription.getText().toString().trim();
         String borrowerName = null;
         String timeStamp = null;
-        String outgoing = null;
-        String incoming = null;
+        boolean outgoing = false;
+        boolean incoming = true;
         String fileStatus = null;
 
         progressBar.setVisibility(View.VISIBLE);
@@ -81,5 +86,36 @@ public class AddFileActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private void setListeners() {
+        binding.ivHome.setOnClickListener(v ->
+                startActivity(new Intent(getApplicationContext(), HomeActivity.class)));
+        binding.ivFiles.setOnClickListener(v ->
+                startActivity(new Intent(getApplicationContext(), FileListActivity.class)));
+        binding.ivProfile.setOnClickListener(v ->
+                startActivity(new Intent(getApplicationContext(), ProfileActivity.class)));
+        binding.ivMenu.setOnClickListener(v ->
+                startActivity(new Intent(getApplicationContext(), MenuActivity.class)));
+    }
+
+    private void loadUserDetails() {
+        String userName = preferenceManager.getString(Constants.KEY_NAME);
+        if (userName != null) {
+            binding.tvUserName.setText(userName);
+        } else {
+            binding.tvUserName.setText("Guest");
+        }
+
+        String userEmail = preferenceManager.getString(Constants.KEY_EMAIL);
+        if (userEmail != null) {
+            binding.tvUserEmail.setText(userEmail);
+        } else {
+            binding.tvUserEmail.setText("Guest");
+        }
+
+        byte[] bytes = Base64.decode(preferenceManager.getString(Constants.KEY_IMAGE), Base64.DEFAULT);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        binding.ivUser.setImageBitmap(bitmap);
     }
 }

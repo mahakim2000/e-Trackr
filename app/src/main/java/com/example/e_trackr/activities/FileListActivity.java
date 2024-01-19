@@ -4,7 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -25,6 +28,7 @@ public class FileListActivity extends AppCompatActivity implements FileListener 
 
     private ActivityFileListBinding binding;
     private PreferenceManager preferenceManager;
+    private List<File> fileList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +37,13 @@ public class FileListActivity extends AppCompatActivity implements FileListener 
         setContentView(binding.getRoot());
         preferenceManager = new PreferenceManager(getApplicationContext());
         setListeners();
+        loadUserDetails();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         binding.fileListActivityRecyclerView.setLayoutManager(layoutManager);
-        getFiles();
+        getFileList();
     }
 
-    private void getFiles() {
+    private void getFileList() {
         loading(true);
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         database.collection(Constants.KEY_COLLECTION_FILE_INFO)
@@ -97,7 +102,7 @@ public class FileListActivity extends AppCompatActivity implements FileListener 
     // Handle user item clicks and open the chat activity with the selected user
     @Override
     public void onFileClicked(File file) {
-        Intent intent = new Intent(getApplicationContext(), AddFileActivity.class);
+        Intent intent = new Intent(getApplicationContext(), FileDetailsActivity.class);
         intent.putExtra(Constants.KEY_FILE, file);
         startActivity(intent);
         finish();
@@ -105,5 +110,25 @@ public class FileListActivity extends AppCompatActivity implements FileListener 
 
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void loadUserDetails() {
+        String userName = preferenceManager.getString(Constants.KEY_NAME);
+        if (userName != null) {
+            binding.tvUserName.setText(userName);
+        } else {
+            binding.tvUserName.setText("Guest");
+        }
+
+        String userEmail = preferenceManager.getString(Constants.KEY_EMAIL);
+        if (userEmail != null) {
+            binding.tvUserEmail.setText(userEmail);
+        } else {
+            binding.tvUserEmail.setText("Guest");
+        }
+
+        byte[] bytes = Base64.decode(preferenceManager.getString(Constants.KEY_IMAGE), Base64.DEFAULT);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        binding.ivUser.setImageBitmap(bitmap);
     }
 }

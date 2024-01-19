@@ -12,7 +12,7 @@
         android:theme="@style/Theme.ETrackr"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivitysadas"
+            android:name=".activities.FileDetailsActivity"
             android:exported="false" />
         <activity
             android:name=".activities.AddFileActivity"
