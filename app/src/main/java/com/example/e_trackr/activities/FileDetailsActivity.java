@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.e_trackr.databinding.ActivityFileDetailsBinding;
 import com.example.e_trackr.utilities.Constants;
 import com.example.e_trackr.utilities.File;
@@ -86,7 +87,18 @@ public class FileDetailsActivity extends AppCompatActivity implements FileListen
                         if (clickedFileList.size() > 0) {
                             FilesAdapter3 filesAdapter3 = new FilesAdapter3(clickedFileList, this);
                             binding.fileDetailsActivityRecyclerView.setAdapter(filesAdapter3);
+
+
+                            Bitmap qrCode = retrieveQRCodeFromFirebase(clickedFileList.get(0));
+
+                            if (qrCode != null) {
+                                binding.ivQRCode.setImageBitmap(qrCode);
+                            } else {
+                                // Handle failure to retrieve or display QR code
+                            }
+
                             binding.fileDetailsActivityRecyclerView.setVisibility(View.VISIBLE);
+
                         } else {
                             showErrorMessage();
                         }
@@ -95,6 +107,37 @@ public class FileDetailsActivity extends AppCompatActivity implements FileListen
                         showErrorMessage();
                     }
                 });
+    }
+
+    private Bitmap retrieveQRCodeFromFirebase(File file) {
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        database.collection(Constants.KEY_COLLECTION_FILE_INFO)
+                .document(file.id)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            String qrCodeBase64 = document.getString(Constants.KEY_QRCODE);
+
+                            if (qrCodeBase64 != null) {
+                                // Decode the Base64 string to a byte array
+                                byte[] qrCodeByteArray = Base64.decode(qrCodeBase64, Base64.DEFAULT);
+
+                                // Convert the byte array to a Bitmap
+                                Bitmap qrCodeBitmap = BitmapFactory.decodeByteArray(qrCodeByteArray, 0, qrCodeByteArray.length);
+
+                                // Display the QR code using Glide
+                                Glide.with(this)
+                                        .load(qrCodeBitmap)
+                                        .into(binding.ivQRCode);
+                            }
+                        }
+                    } else {
+                        Log.e("Firestore", "Error getting QR code: ", task.getException());
+                    }
+                });
+        return null;
     }
 
     private void setListeners() {

@@ -168,6 +168,16 @@
 
     </ScrollView>
 
+    <ImageView
+        android:id="@+id/ivQRCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        app:srcCompat="@drawable/ic_launcher_foreground"
+        tools:src="@drawable/ic_launcher_foreground"
+        android:background="@color/dark_white"/>
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"

@@ -6,8 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -22,7 +24,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,38 +68,89 @@ public class AddFileActivity extends AppCompatActivity {
     }
 
     private void uploadFileInfo() {
-        String fileName = etFileName.getText().toString().trim();
-        String fileDescription = etFileDescription.getText().toString().trim();
-        String borrowerName = null;
-        String timeStamp = null;
-        boolean outgoing = false;
-        boolean incoming = true;
-        String fileStatus = null;
+        try {
+            String fileName = etFileName.getText().toString().trim();
+            String fileDescription = etFileDescription.getText().toString().trim();
+            String borrowerName = null;
+            String timeStamp = null;
+            boolean outgoing = false;
+            boolean incoming = true;
+            String fileStatus = null;
 
-        progressBar.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
 
-        Map<String, Object> fileInfo = new HashMap<>();
-        fileInfo.put(Constants.KEY_FILENAME, fileName);
-        fileInfo.put(Constants.KEY_FILEDESCRIPTION, fileDescription);
-        fileInfo.put(Constants.KEY_BORROWERNAME, borrowerName);
-        fileInfo.put(Constants.KEY_TIMESTAMP, timeStamp);
-        fileInfo.put(Constants.KEY_OUTGOING, outgoing);
-        fileInfo.put(Constants.KEY_INCOMING, incoming);
+            Map<String, Object> fileInfo = new HashMap<>();
+            fileInfo.put(Constants.KEY_FILENAME, fileName);
+            fileInfo.put(Constants.KEY_FILEDESCRIPTION, fileDescription);
+            fileInfo.put(Constants.KEY_BORROWERNAME, borrowerName);
+            fileInfo.put(Constants.KEY_TIMESTAMP, timeStamp);
+            fileInfo.put(Constants.KEY_OUTGOING, outgoing);
+            fileInfo.put(Constants.KEY_INCOMING, incoming);
 
-        firestore.collection(Constants.KEY_COLLECTION_FILE_INFO)
-                .add(fileInfo)
-                .addOnCompleteListener(new OnCompleteListener() {
-                    @Override
-                    public void onComplete(@NonNull Task task) {
-                        progressBar.setVisibility(View.INVISIBLE);
-                        if (task.isSuccessful()) {
-                            Toast.makeText(AddFileActivity.this, "File info uploaded successfully", Toast.LENGTH_SHORT).show();
-                            finish();
-                        } else {
-                            Toast.makeText(AddFileActivity.this, "Error uploading file info", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+            String fileData = fileName + "\n" + fileDescription;
+            Bitmap qrCode = generateQRCode(fileData);
+
+            if (qrCode != null) {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                qrCode.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                byte[] qrCodeByteArray = baos.toByteArray();
+                String qrCodeBase64 = Base64.encodeToString(qrCodeByteArray, Base64.DEFAULT);
+                fileInfo.put(Constants.KEY_QRCODE, qrCodeBase64);
+
+                firestore.collection(Constants.KEY_COLLECTION_FILE_INFO)
+                        .add(fileInfo)
+                        .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                progressBar.setVisibility(View.INVISIBLE);
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(AddFileActivity.this, "File info uploaded successfully", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                } else {
+                                    Log.e("Firestore", "Error uploading file info", task.getException());
+                                    Toast.makeText(AddFileActivity.this, "Error uploading file info", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            } else {
+                // Handle the case where generating QR code fails
+                progressBar.setVisibility(View.INVISIBLE);
+                Log.e("QRCode", "Error generating QR code");
+                Toast.makeText(AddFileActivity.this, "Error generating QR code", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            // Handle other exceptions
+            e.printStackTrace();
+            progressBar.setVisibility(View.INVISIBLE);
+            Log.e("Upload", "Error uploading file info", e);
+            Toast.makeText(AddFileActivity.this, "An error occurred", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private Bitmap generateQRCode(String data) {
+        try {
+            BitMatrix bitMatrix = new MultiFormatWriter().encode(
+                    data,
+                    BarcodeFormat.QR_CODE,
+                    300,  // width and height of the QR code
+                    300
+            );
+
+            int width = bitMatrix.getWidth();
+            int height = bitMatrix.getHeight();
+            Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    bitmap.setPixel(x, y, bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE);
+                }
+            }
+
+            return bitmap;
+        } catch (WriterException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private void setListeners() {
