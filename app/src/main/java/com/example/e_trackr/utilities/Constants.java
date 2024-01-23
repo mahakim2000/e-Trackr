@@ -12,8 +12,8 @@ public class Constants {
     public static final String KEY_IMAGE = "image";
     public static final String KEY_FCM_TOKEN = "fcmToken";
     public static final String KEY_FILE = "file";
-    public static final String KEY_FILENAME = "fileName";
-    public static final String KEY_FILEDESCRIPTION = "fileDescription";
+    public static String KEY_FILENAME = "fileName";
+    public static String KEY_FILEDESCRIPTION = "fileDescription";
     public static final String KEY_BORROWERNAME = "borrowerName";
     public static final String KEY_TIMESTAMP = "timestamp";
     public static final String KEY_FILEDETAIL = "fileDetail";
@@ -21,6 +21,8 @@ public class Constants {
     public static final String KEY_OUTGOING = "outgoing";
     public static final String KEY_INCOMING = "incoming";
     public static final String KEY_QRCODE = "qrCode";
+
+    public static final String KEY_CHOSENOPTION = "chosenOption";
 
     public static final int REQUEST_CODE_IMAGE_PICKER = 100;
 }

@@ -17,7 +17,6 @@ import com.example.e_trackr.utilities.File;
 import com.example.e_trackr.utilities.FileListener;
 import com.example.e_trackr.utilities.FilesAdapter;
 import com.example.e_trackr.utilities.PreferenceManager;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -96,6 +95,8 @@ public class HomeActivity extends AppCompatActivity implements FileListener {
     }
 
     private void setListeners() {
+        binding.fabScan.setOnClickListener(v ->
+                startActivity(new Intent(getApplicationContext(), ScanQRActivity.class)));
         binding.tvViewAll.setOnClickListener(v ->
                 startActivity(new Intent(getApplicationContext(), FileListActivity.class)));
         binding.ivHome.setOnClickListener(v ->
