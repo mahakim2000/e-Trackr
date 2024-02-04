@@ -11,8 +11,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.e_trackr.databinding.ActivityScanQrBinding;
@@ -120,7 +122,13 @@ public class ScanQRActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             String selectedOption = (which == 0) ? "Incoming" : "Outgoing";
                             setResult(qrCodeContents);
-                            updateChosenOption(fileName, fileDescription, selectedOption);
+                            if (selectedOption.equals("Outgoing")) {
+                                // If Outgoing is selected, show another dialog to input a name
+                                showNameInputDialog();
+                            } else {
+                                // If Incoming is selected, update the chosen option immediately
+                                updateChosenOption(fileName, fileDescription, selectedOption, null); // Pass null for the borrower's name
+                            }
                             dialog.dismiss();
                         }
                     })
@@ -130,8 +138,42 @@ public class ScanQRActivity extends AppCompatActivity {
         }
     }
 
+    private void showNameInputDialog() {
+        // Set up the input field in the dialog
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        input.setHint("Enter Borrower's Name");
 
-    private void updateChosenOption(String fileName, String fileDescription, String selectedOption) {
+        // Build the dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("File Information")
+                .setView(input)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Get the entered borrower's name
+                        String borrowerName = input.getText().toString().trim();
+
+                        // Perform any validation on the entered name if needed
+                        if (!borrowerName.isEmpty()) {
+                            // Update the chosen option with "Outgoing" and store borrower's name
+                            updateChosenOption(Constants.KEY_FILENAME, Constants.KEY_FILEDESCRIPTION, "Outgoing", borrowerName);
+                        } else {
+                            Toast.makeText(ScanQRActivity.this, "Name cannot be empty", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // User canceled the input
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    private void updateChosenOption(String fileName, String fileDescription, String selectedOption, String borrowerName) {
         Log.d("infodia", "Updating option for \nFileName:" + fileName + "\nFileDescription:" + fileDescription);
 
         FirebaseFirestore database = FirebaseFirestore.getInstance();
@@ -146,22 +188,24 @@ public class ScanQRActivity extends AppCompatActivity {
                         Log.d("infodia", "Matching document found");
                         DocumentReference documentReference = queryDocumentSnapshots.getDocuments().get(0).getReference();
 
-                        // Update the boolean status based on the selected option
+                        // Update the boolean status and store borrower's name
                         boolean isIncoming = selectedOption.equals("Incoming");
                         boolean isOutgoing = selectedOption.equals("Outgoing");
 
                         Map<String, Object> updateData = new HashMap<>();
                         updateData.put(Constants.KEY_INCOMING, isIncoming);
                         updateData.put(Constants.KEY_OUTGOING, isOutgoing);
+                        updateData.put(Constants.KEY_BORROWERNAME, borrowerName);
+                        updateData.put(Constants.KEY_TIMESTAMP, FieldValue.serverTimestamp());
 
                         documentReference.update(updateData)
                                 .addOnSuccessListener(aVoid -> {
-                                    Log.d("infodia", "Boolean status updated successfully");
-                                    Toast.makeText(ScanQRActivity.this, "Boolean status updated successfully", Toast.LENGTH_SHORT).show();
+                                    Log.d("infodia", "Boolean status and borrower's name updated successfully");
+                                    Toast.makeText(ScanQRActivity.this, "Boolean status and borrower's name updated successfully", Toast.LENGTH_SHORT).show();
                                 })
                                 .addOnFailureListener(e -> {
-                                    Log.e("infodia", "Boolean status update failed: " + e.getMessage());
-                                    Toast.makeText(ScanQRActivity.this, "Boolean status update failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    Log.e("infodia", "Boolean status and borrower's name update failed: " + e.getMessage());
+                                    Toast.makeText(ScanQRActivity.this, "Boolean status and borrower's name update failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 });
                     } else {
                         // No matching document found

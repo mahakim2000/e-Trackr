@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@color/white"
-    tools:context=".activities.ProfileActivity"
+    tools:context=".activities.OutGoingActivity"
     android:orientation="vertical">
 
     <ScrollView
@@ -54,7 +54,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="32dp"
-                    android:text="File List"
+                    android:text="Out-going List"
                     android:textColor="@color/white"
                     android:textSize="30sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -93,6 +93,32 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <TextView
+                android:id="@+id/textViewg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="View File"
+                android:textColor="@color/primary"
+                android:layout_gravity="center_horizontal"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textViewh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tap any file to view its details"
+                android:textColor="@color/primary"
+                android:layout_gravity="center_horizontal"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -101,33 +127,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout">
-
-                <TextView
-                    android:id="@+id/textViewg"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Manage File"
-                    android:textColor="@color/primary"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="25sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/textViewh"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tap any file to view its details, \nor select 'Add New File' to add a new one"
-                    android:textColor="@color/primary"
-                    android:gravity="center"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -141,20 +140,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="32dp"
                         android:layout_weight="1"
-                        android:text="List of Project Files"
+                        android:text="List of Borrowed Files"
                         android:textColor="@color/primary"
                         android:textSize="20sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvAddNewFile"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="32dp"
-                        android:layout_weight="1"
-                        android:text="Add New File"
-                        android:textAlignment="viewEnd"
-                        android:textColor="@color/primary"
                         android:textStyle="bold" />
 
                 </LinearLayout>
@@ -185,7 +173,7 @@
                         android:layout_gravity="center" />
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/fileListActivityRecyclerView"
+                        android:id="@+id/outgoingListActivityRecyclerView"
                         android:layout_marginTop="20dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

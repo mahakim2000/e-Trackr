@@ -2,10 +2,10 @@ package com.example.e_trackr.activities;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.Manifest;
 import android.content.Context;
@@ -14,7 +14,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Base64;
@@ -22,36 +21,38 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.e_trackr.R;
-import com.example.e_trackr.databinding.ActivityFileAddBinding;
+import com.example.e_trackr.databinding.ActivityFileListBinding;
+import com.example.e_trackr.databinding.ActivityOutGoingBinding;
 import com.example.e_trackr.utilities.Constants;
+import com.example.e_trackr.utilities.File;
+import com.example.e_trackr.utilities.FileListener;
+import com.example.e_trackr.utilities.FilesAdapter2;
+import com.example.e_trackr.utilities.FilesAdapter4;
 import com.example.e_trackr.utilities.PreferenceManager;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
-import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
-public class AddFileActivity extends AppCompatActivity {
+public class OutGoingActivity extends AppCompatActivity implements FileListener {
 
-    private ActivityFileAddBinding binding;
+    private ActivityOutGoingBinding binding;
     private PreferenceManager preferenceManager;
-    private EditText etFileName, etFileDescription;
-    private ProgressBar progressBar;
+    private List<File> fileList;
     private FirebaseFirestore firestore;
     private String userId;
     private String userImage;
@@ -61,23 +62,16 @@ public class AddFileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityFileAddBinding.inflate(getLayoutInflater());
+        binding = ActivityOutGoingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         preferenceManager = new PreferenceManager(getApplicationContext());
         firestore = FirebaseFirestore.getInstance();
         userId = preferenceManager.getString(Constants.KEY_USER_ID);
         setListeners();
         retrieveUserDetails();
-        etFileName = findViewById(R.id.etFileName);
-        etFileDescription = findViewById(R.id.etFileDescription);
-        progressBar = findViewById(R.id.progressBar);
-
-        binding.btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                uploadFileInfo();
-            }
-        });
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        binding.outgoingListActivityRecyclerView.setLayoutManager(layoutManager);
+        getFileList();
         initViews();
     }
 
@@ -194,7 +188,7 @@ public class AddFileActivity extends AppCompatActivity {
                             // Update the chosen option with "Outgoing" and store borrower's name
                             updateChosenOption(Constants.KEY_FILENAME, Constants.KEY_FILEDESCRIPTION, "Outgoing", borrowerName);
                         } else {
-                            Toast.makeText(AddFileActivity.this, "Name cannot be empty", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(OutGoingActivity.this, "Name cannot be empty", Toast.LENGTH_SHORT).show();
                         }
                     }
                 })
@@ -236,108 +230,69 @@ public class AddFileActivity extends AppCompatActivity {
                         documentReference.update(updateData)
                                 .addOnSuccessListener(aVoid -> {
                                     Log.d("infodia", "Boolean status and borrower's name updated successfully");
-                                    Toast.makeText(AddFileActivity.this, "Boolean status and borrower's name updated successfully", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(OutGoingActivity.this, "Boolean status and borrower's name updated successfully", Toast.LENGTH_SHORT).show();
                                 })
                                 .addOnFailureListener(e -> {
                                     Log.e("infodia", "Boolean status and borrower's name update failed: " + e.getMessage());
-                                    Toast.makeText(AddFileActivity.this, "Boolean status and borrower's name update failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(OutGoingActivity.this, "Boolean status and borrower's name update failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 });
                     } else {
                         // No matching document found
                         Log.d("infodia", "No matching document found");
-                        Toast.makeText(AddFileActivity.this, "No matching document found", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(OutGoingActivity.this, "No matching document found", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(e -> {
                     Log.e("infodia", "Firestore query failed: " + e.getMessage());
-                    Toast.makeText(AddFileActivity.this, "Firestore query failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(OutGoingActivity.this, "Firestore query failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
-    private void uploadFileInfo() {
-        try {
-            String fileName = etFileName.getText().toString().trim();
-            String fileDescription = etFileDescription.getText().toString().trim();
-            String borrowerName = null;
-            String timeStamp = null;
-            boolean outgoing = false;
-            boolean incoming = true;
-            String fileStatus = null;
+    private void getFileList() {
+        loading(true);
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        DocumentReference userRef = firestore.collection(Constants.KEY_COLLECTION_USERS).document(userId);
+        database.collection(Constants.KEY_COLLECTION_FILE_INFO)
+                .whereEqualTo(Constants.KEY_OUTGOING, true) // Add this condition
+                .get()
+                .addOnCompleteListener(task -> {
+                    loading(false);
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        List<File> files = new ArrayList<>();
+                        for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
+                            File file = new File();
+                            file.fileName = queryDocumentSnapshot.getString(Constants.KEY_FILENAME);
+                            file.fileDescription = queryDocumentSnapshot.getString(Constants.KEY_FILEDESCRIPTION);
+                            file.borrowerName = queryDocumentSnapshot.getString(Constants.KEY_BORROWERNAME);
 
-            progressBar.setVisibility(View.VISIBLE);
-
-            Map<String, Object> fileInfo = new HashMap<>();
-            fileInfo.put(Constants.KEY_FILENAME, fileName);
-            fileInfo.put(Constants.KEY_FILEDESCRIPTION, fileDescription);
-            fileInfo.put(Constants.KEY_BORROWERNAME, borrowerName);
-            fileInfo.put(Constants.KEY_TIMESTAMP, timeStamp);
-            fileInfo.put(Constants.KEY_OUTGOING, outgoing);
-            fileInfo.put(Constants.KEY_INCOMING, incoming);
-
-            String fileData = fileName + "\n" + fileDescription;
-            Bitmap qrCode = generateQRCode(fileData);
-
-            if (qrCode != null) {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                qrCode.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                byte[] qrCodeByteArray = baos.toByteArray();
-                String qrCodeBase64 = Base64.encodeToString(qrCodeByteArray, Base64.DEFAULT);
-                fileInfo.put(Constants.KEY_QRCODE, qrCodeBase64);
-
-                firestore.collection(Constants.KEY_COLLECTION_FILE_INFO)
-                        .add(fileInfo)
-                        .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentReference> task) {
-                                progressBar.setVisibility(View.INVISIBLE);
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(AddFileActivity.this, "File info uploaded successfully", Toast.LENGTH_SHORT).show();
-                                    finish();
-                                } else {
-                                    Log.e("Firestore", "Error uploading file info", task.getException());
-                                    Toast.makeText(AddFileActivity.this, "Error uploading file info", Toast.LENGTH_SHORT).show();
-                                }
+                            // Retrieve and format the timestamp
+                            Timestamp timestamp = queryDocumentSnapshot.getTimestamp(Constants.KEY_TIMESTAMP);
+                            if (timestamp != null) {
+                                Date date = timestamp.toDate();
+                                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+                                file.timeStamp = sdf.format(date);
+                            } else {
+                                file.timeStamp = "";  // Set default value if timestamp is null
                             }
-                        });
-            } else {
-                // Handle the case where generating QR code fails
-                progressBar.setVisibility(View.INVISIBLE);
-                Log.e("QRCode", "Error generating QR code");
-                Toast.makeText(AddFileActivity.this, "Error generating QR code", Toast.LENGTH_SHORT).show();
-            }
-        } catch (Exception e) {
-            // Handle other exceptions
-            e.printStackTrace();
-            progressBar.setVisibility(View.INVISIBLE);
-            Log.e("Upload", "Error uploading file info", e);
-            Toast.makeText(AddFileActivity.this, "An error occurred", Toast.LENGTH_SHORT).show();
-        }
-    }
 
-    private Bitmap generateQRCode(String data) {
-        try {
-            BitMatrix bitMatrix = new MultiFormatWriter().encode(
-                    data,
-                    BarcodeFormat.QR_CODE,
-                    300,  // width and height of the QR code
-                    300
-            );
+                            file.outgoing = Boolean.TRUE.equals(queryDocumentSnapshot.getBoolean(Constants.KEY_OUTGOING));
+                            file.incoming = Boolean.TRUE.equals(queryDocumentSnapshot.getBoolean(Constants.KEY_INCOMING));
+                            file.id = queryDocumentSnapshot.getId();
+                            files.add(file);
+                        }
 
-            int width = bitMatrix.getWidth();
-            int height = bitMatrix.getHeight();
-            Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-
-            for (int x = 0; x < width; x++) {
-                for (int y = 0; y < height; y++) {
-                    bitmap.setPixel(x, y, bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE);
-                }
-            }
-
-            return bitmap;
-        } catch (WriterException e) {
-            e.printStackTrace();
-            return null;
-        }
+                        if (files.size() > 0) {
+                            FilesAdapter4 filesAdapter4 = new FilesAdapter4(files, this);
+                            binding.outgoingListActivityRecyclerView.setAdapter(filesAdapter4);
+                            binding.outgoingListActivityRecyclerView.setVisibility(View.VISIBLE);
+                        } else {
+                            showErrorMessage();
+                        }
+                    } else {
+                        Log.e("Firestore", "Error getting documents: ", task.getException());
+                        showErrorMessage();
+                    }
+                });
     }
 
     private void setListeners() {
@@ -365,6 +320,27 @@ public class AddFileActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
         finish();
         startActivity(intent);
+    }
+
+    private void showErrorMessage() {
+        binding.textErrorMessage.setText(String.format("%s", "No user available"));
+        binding.textErrorMessage.setVisibility(View.VISIBLE);
+    }
+
+    private void loading(Boolean isLoading) {
+        if(isLoading) {
+            binding.progressBar.setVisibility(View.VISIBLE);
+        } else {
+            binding.progressBar.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
+    public void onFileClicked(File file) {
+        Intent intent = new Intent(getApplicationContext(), FileDetailsActivity.class);
+        intent.putExtra(Constants.KEY_FILE, file);
+        startActivity(intent);
+        finish();
     }
 
     private void showToast(String message) {

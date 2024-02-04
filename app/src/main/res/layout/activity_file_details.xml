@@ -24,8 +24,54 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="150dp"
                 android:background="@color/primary">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clBack"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="25dp"
+                    android:background="@drawable/background_oval_1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/ivBack"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/back" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:text="File Info"
+                    android:textColor="@color/white"
+                    android:textSize="30sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/ivUser"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:background="@drawable/background_icon"
+                    android:scaleType="centerCrop"
+                    android:layout_marginEnd="32dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/clBack"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/clBack"
+                    app:riv_corner_radius="@dimen/_8sdp"/>
 
                 <ImageView
                     android:id="@+id/imageView"
@@ -36,68 +82,42 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:srcCompat="@drawable/arc_3" />
 
-                <com.makeramen.roundedimageview.RoundedImageView
-                    android:id="@+id/ivUser"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:background="@drawable/background_icon"
-                    android:scaleType="centerCrop"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageView"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:riv_corner_radius="@dimen/_8sdp"/>
-
                 <TextView
-                    android:id="@+id/textView"
+                    android:id="@+id/textResult"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="32dp"
-                    android:text="File List"
-                    android:textColor="@color/white"
-                    android:textSize="30sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="32dp"
-                    android:background="@drawable/background_oval_1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <ImageView
-                        android:id="@+id/imageView3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/back" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:textSize="26sp"
+                    android:textStyle="bold"
+                    android:text="RESULT"
+                    android:visibility="gone"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
-                android:id="@+id/tvUserName"
-                android:layout_width="match_parent"
-                android:textAlignment="center"
+                android:id="@+id/textViewg"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="User Name"
+                android:text="View File"
                 android:textColor="@color/primary"
-                android:textSize="26sp"
+                android:layout_gravity="center_horizontal"
+                android:textSize="25sp"
                 android:textStyle="bold"
-                android:layout_marginTop="8dp"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tvUserEmail"
-                android:layout_width="match_parent"
-                android:textAlignment="center"
+                android:id="@+id/textViewh"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Email"/>
+                android:text="Below are the file details"
+                android:textColor="@color/primary"
+                android:layout_gravity="center_horizontal"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -112,7 +132,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/_40sdp">
 
                     <TextView
                         android:id="@+id/textView9"
@@ -164,19 +185,18 @@
 
             </LinearLayout>
 
+            <ImageView
+                android:id="@+id/ivQRCode"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ic_launcher_foreground"
+                tools:src="@drawable/ic_launcher_foreground"
+                android:background="@color/dark_white"/>
+
         </LinearLayout>
 
     </ScrollView>
-
-    <ImageView
-        android:id="@+id/ivQRCode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="16dp"
-        app:srcCompat="@drawable/ic_launcher_foreground"
-        tools:src="@drawable/ic_launcher_foreground"
-        android:background="@color/dark_white"/>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"

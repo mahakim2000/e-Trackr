@@ -68,6 +68,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="@+id/ivUser"
                             app:srcCompat="@drawable/notification" />
+
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <TextView
@@ -75,30 +76,22 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="32dp"
-                        android:layout_marginTop="32dp"
+                        android:layout_marginTop="25dp"
+                        android:layout_marginBottom="25dp"
                         android:gravity="center"
                         android:text="Today's Overview"
                         android:textColor="@color/white"
                         android:textSize="30sp"
                         android:textStyle="bold" />
 
-                    <EditText
-                        android:id="@+id/editTextText"
-                        android:layout_width="match_parent"
-                        android:layout_height="55dp"
-                        android:layout_marginStart="32dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="32dp"
-                        android:layout_marginBottom="16dp"
-                        android:background="@drawable/background_edittext"
-                        android:drawableStart="@drawable/search"
-                        android:drawablePadding="16dp"
-                        android:ems="10"
-                        android:hint="Search..."
-                        android:inputType="text"
-                        android:padding="16dp"
-                        android:textColor="@color/white"
-                        android:textColorHint="@color/white" />
+                    <TextView
+                        android:id="@+id/textResult"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="26sp"
+                        android:textStyle="bold"
+                        android:text="RESULT"
+                        android:visibility="gone"/>
 
                 </LinearLayout>
 
@@ -123,6 +116,7 @@
                         android:orientation="horizontal">
 
                         <androidx.cardview.widget.CardView
+                            android:id="@+id/outgoingInfo"
                             android:layout_width="165dp"
                             android:layout_height="120dp"
                             android:layout_margin="10dp"
@@ -191,6 +185,7 @@
                         </androidx.cardview.widget.CardView>
 
                         <androidx.cardview.widget.CardView
+                            android:id="@+id/incomingInfo"
                             android:layout_width="165dp"
                             android:layout_height="120dp"
                             android:layout_margin="10dp"
@@ -295,8 +290,12 @@
                                         android:id="@+id/constraintLayout1"
                                         android:layout_width="60dp"
                                         android:layout_height="60dp"
-                                        android:layout_margin="16dp"
-                                        android:background="@drawable/background_oval_2">
+                                        android:layout_marginTop="25dp"
+                                        android:background="@drawable/background_oval_2"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent">
 
                                         <ImageView
                                             android:id="@+id/imageView7"
@@ -312,11 +311,15 @@
 
                                     <TextView
                                         android:id="@+id/textView6"
-                                        android:layout_width="match_parent"
+                                        android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginLeft="16dp"
+                                        android:layout_marginTop="8dp"
                                         android:text="Overview"
-                                        android:textStyle="bold" />
+                                        android:textStyle="bold"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toBottomOf="@+id/constraintLayout1"/>
 
                                 </LinearLayout>
 
@@ -326,14 +329,39 @@
                                     android:gravity="center"
                                     android:orientation="vertical">
 
-                                    <TextView
-                                        android:id="@+id/tvRemainingFiles"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="center"
-                                        android:text="X"
-                                        android:textSize="40sp"
-                                        android:textStyle="bold" />
+                                    <androidx.constraintlayout.widget.ConstraintLayout
+                                        android:id="@+id/constraintLayoutX"
+                                        android:layout_width="60dp"
+                                        android:layout_height="120dp"
+                                        android:layout_margin="16dp" >
+
+                                        <TextView
+                                            android:id="@+id/tvRemainingFiles"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_gravity="center"
+                                            android:text="X"
+                                            android:textSize="40sp"
+                                            android:textStyle="bold"
+                                            app:layout_constraintBottom_toBottomOf="parent"
+                                            app:layout_constraintEnd_toEndOf="parent"
+                                            app:layout_constraintStart_toStartOf="parent"
+                                            app:layout_constraintTop_toTopOf="parent"/>
+
+                                        <TextView
+                                            android:id="@+id/tvRemainingText"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_gravity="center"
+                                            android:text="Remaining"
+                                            android:textSize="10sp"
+                                            android:textStyle="bold"
+                                            app:layout_constraintBottom_toBottomOf="parent"
+                                            app:layout_constraintEnd_toEndOf="parent"
+                                            app:layout_constraintStart_toStartOf="parent"
+                                            app:layout_constraintTop_toBottomOf="@+id/tvRemainingFiles" />
+
+                                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                                 </LinearLayout>
 
@@ -359,14 +387,39 @@
                                     android:gravity="center"
                                     android:orientation="vertical">
 
-                                    <TextView
-                                        android:id="@+id/tvTotalFiles"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="center"
-                                        android:text="Z"
-                                        android:textSize="40sp"
-                                        android:textStyle="bold" />
+                                    <androidx.constraintlayout.widget.ConstraintLayout
+                                        android:id="@+id/constraintLayoutY"
+                                        android:layout_width="60dp"
+                                        android:layout_height="120dp"
+                                        android:layout_margin="16dp" >
+
+                                        <TextView
+                                            android:id="@+id/tvTotalFiles"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_gravity="center"
+                                            android:text="Z"
+                                            android:textSize="40sp"
+                                            android:textStyle="bold"
+                                            app:layout_constraintBottom_toBottomOf="parent"
+                                            app:layout_constraintEnd_toEndOf="parent"
+                                            app:layout_constraintStart_toStartOf="parent"
+                                            app:layout_constraintTop_toTopOf="parent"/>
+
+                                        <TextView
+                                            android:id="@+id/tvTotalText"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_gravity="center"
+                                            android:text="Total"
+                                            android:textSize="10sp"
+                                            android:textStyle="bold"
+                                            app:layout_constraintBottom_toBottomOf="parent"
+                                            app:layout_constraintEnd_toEndOf="parent"
+                                            app:layout_constraintStart_toStartOf="parent"
+                                            app:layout_constraintTop_toBottomOf="@+id/tvTotalFiles" />
+
+                                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                                 </LinearLayout>
 
